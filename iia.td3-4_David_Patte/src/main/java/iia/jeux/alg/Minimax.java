@@ -76,8 +76,9 @@ public class Minimax implements AlgoJeu {
     	int hMax =  minMax(pTempCoup1);
         
     	
-    	
-        for(int i =1; i< p.coupsPossibles(this.joueurMax).size();i++) {
+    	System.out.println("nbCoupsPossibles = "+p.coupsPossibles(this.joueurMax).size());
+        for(int i =1; i < p.coupsPossibles(this.joueurMax).size();i++) {
+        	//System.out.println("i="+i);
         	PlateauDominos pTemp = (PlateauDominos) p.copy();
         	CoupDominos coup = (CoupDominos) p.coupsPossibles(this.joueurMax).get(i);
         	pTemp.joue(this.joueurMax, coup);
@@ -88,6 +89,7 @@ public class Minimax implements AlgoJeu {
         		hMax = hTemp;
         		coupMax = coup;
         	}
+        	profMax = PROFMAXDEFAUT;
         }
         return coupMax;
     }
@@ -108,37 +110,44 @@ public class Minimax implements AlgoJeu {
     
     private int maxMin(PlateauDominos p){
     	
-    	if(this.profMax <= 0) {
-    		this.profMax = PROFMAXDEFAUT;
+    	//System.out.println("maxMin profMax = "+profMax);
+    	if(this.profMax <= 1 || p.finDePartie()) {
     		return h.eval(p, joueurMax);
     	}else {
     		//eval favorable
     		int maxi = -999; //a modifier pour d'autres jeux
-    		this.profMax--;
+    		    		
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
     			PlateauDominos pTemp = (PlateauDominos) p.copy();
             	pTemp.joue(this.joueurMax, coup);
-    			maxi = Math.max(maxi, minMax(pTemp));
+    	
+            	//appel rec
+            	profMax--;
+            	maxi = Math.max(maxi, minMax(pTemp));
+            	profMax++;
+    			
     		}
-    		
     		return maxi;
     	}
     }
     private int minMax(PlateauDominos p){
-    	if(this.profMax <= 0) {
-    		this.profMax = PROFMAXDEFAUT;
+    	
+    	//System.out.println("minMax profMax = "+profMax);
+    	if(this.profMax <= 1|| p.finDePartie()) {
     		return h.eval(p, joueurMax);
     	}else {
     		//eval favorable
-    		this.profMax--;
     		int mini = +999; //a modifier pour d'autres jeux
+    		
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
     			PlateauDominos pTemp = (PlateauDominos) p.copy();
             	pTemp.joue(this.joueurMax, coup);
-            	
+            	//appel rec
+            	profMax--;
             	mini = Math.min(mini, maxMin(pTemp));
+            	profMax++;
     		}
     		return mini;
     	}
