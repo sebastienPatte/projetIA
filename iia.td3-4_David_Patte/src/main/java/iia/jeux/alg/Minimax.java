@@ -90,7 +90,11 @@ public class Minimax implements AlgoJeu {
         		coupMax = coup;
         	}
         	profMax = PROFMAXDEFAUT;
+        	
         }
+        System.out.println("nbFeuilles = "+nbfeuilles+" nbNoeuds = "+nbnoeuds);
+        nbfeuilles=0;
+        nbnoeuds=0;
         return coupMax;
     }
   // -------------------------------------------
@@ -112,11 +116,12 @@ public class Minimax implements AlgoJeu {
     	
     	//System.out.println("maxMin profMax = "+profMax);
     	if(this.profMax <= 1 || p.finDePartie()) {
+    		nbfeuilles++;
     		return h.eval(p, joueurMax);
     	}else {
     		//eval favorable
-    		int maxi = -999; //a modifier pour d'autres jeux
-    		    		
+    		nbnoeuds++;
+    		int maxi = -999; //a modifier pour d'autres jeux    		
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
     			PlateauDominos pTemp = (PlateauDominos) p.copy();
@@ -135,11 +140,12 @@ public class Minimax implements AlgoJeu {
     	
     	//System.out.println("minMax profMax = "+profMax);
     	if(this.profMax <= 1|| p.finDePartie()) {
+    		nbfeuilles++;
     		return h.eval(p, joueurMax);
     	}else {
     		//eval favorable
+    		nbnoeuds++;
     		int mini = +999; //a modifier pour d'autres jeux
-    		
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
     			PlateauDominos pTemp = (PlateauDominos) p.copy();

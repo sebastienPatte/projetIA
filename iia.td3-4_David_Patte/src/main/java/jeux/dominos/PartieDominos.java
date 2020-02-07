@@ -1,6 +1,7 @@
 package jeux.dominos;
 
 import iia.jeux.alg.AlgoJeu;
+import iia.jeux.alg.AlphaBeta;
 import iia.jeux.alg.Minimax;
 import iia.jeux.modele.CoupJeu;
 import iia.jeux.modele.PlateauJeu;
@@ -22,7 +23,7 @@ public class PartieDominos {
 
 
         AlgoJeu AlgoJoueur[] = new AlgoJeu[2];
-        AlgoJoueur[0] = new Minimax(HeuristiquesDominos.hblanc, jBlanc, jNoir); // Il faut remplir la méthode !!!
+        AlgoJoueur[0] = new AlphaBeta(HeuristiquesDominos.hblanc, jBlanc, jNoir); // Il faut remplir la méthode !!!
         AlgoJoueur[1] = new Minimax(HeuristiquesDominos.hnoir, jNoir, jBlanc);  // Il faut remplir la méthode !!!
 
         System.out.println("TD IIA n.3 - Algorithmes pour les Jeux");
@@ -61,7 +62,7 @@ public class PartieDominos {
                 jnum = 1 - jnum;
 
             } else {
-                System.out.println("Le joueur " + lesJoueurs[jnum] + " ne peut plus jouer et abandone !");
+                System.out.println("Le joueur " + lesJoueurs[jnum] + " ne peut plus jouer et abandonne !");
                 System.out.println("Le joueur " + lesJoueurs[1 - jnum] + " a gagné cette partie !");
                 jeufini = true;
 
