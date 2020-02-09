@@ -11,7 +11,14 @@ public class HeuristiquesDominos{
 				
 		public int eval(PlateauJeu p, Joueur j){
 			PlateauDominos newP = (PlateauDominos) p;
-			return newP.nbCoupsBlanc() - newP.nbCoupsNoir();
+			
+			if(newP.isJoueurBlanc(j)) {
+				//heuristique pour joueur blanc
+				return newP.nbCoupsBlanc() - newP.nbCoupsNoir();
+			}else {
+				//heuristique pour joueur noir
+				return newP.nbCoupsBlanc() - newP.nbCoupsNoir();
+			}
 		}
 	};
 
@@ -19,7 +26,17 @@ public class HeuristiquesDominos{
 	
 		public int eval(PlateauJeu p, Joueur j){
 			PlateauDominos newP = (PlateauDominos) p;
-			return newP.nbCoupsNoir() - newP.nbCoupsBlanc();
+			
+			if(newP.isJoueurBlanc(j)) {
+				//heuristique pour joueur blanc
+				return newP.nbCoupsNoir() - newP.nbCoupsBlanc();
+			}else {
+				//heuristique pour joueur noir
+				return newP.nbCoupsNoir() - newP.nbCoupsBlanc();
+			}
+			
+			
+			
 		}
 	};
 

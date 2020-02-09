@@ -42,8 +42,10 @@ public class PartieDominos {
         // tour a tour
         jnum = 0; // On commence par le joueur Blanc (arbitraire)
 
+        int nbCoups = 0;
         while (!jeufini) {
-            System.out.println("" + plateauCourant);
+            nbCoups++;
+        	System.out.println("" + plateauCourant);
             System.out.println("C'est au joueur " + lesJoueurs[jnum] + " de jouer.");
             // Vérifie qu'il y a bien des coups possibles
             // Ce n'est pas tres efficace, mais c'est plus rapide... a écrire...
@@ -68,5 +70,6 @@ public class PartieDominos {
 
             }
         }
+        System.out.println("nbCoups = "+nbCoups);
     }
 }
