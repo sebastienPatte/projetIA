@@ -64,7 +64,7 @@ public class AlphaBeta implements AlgoJeu{
         CoupJeu coupMax = p.coupsPossibles(this.joueurMax).get(0);
         PlateauDominos pTempCoup1 = (PlateauDominos) p.copy();
     	pTempCoup1.joue(this.joueurMax, p.coupsPossibles(this.joueurMax).get(0));
-    	int hMax =  maxMin(pTempCoup1,-999,999);
+    	int hMax =  minMax(pTempCoup1,-999,999);
         
     	
     	System.out.println("nbCoupsPossibles = "+p.coupsPossibles(this.joueurMax).size());
@@ -74,7 +74,7 @@ public class AlphaBeta implements AlgoJeu{
         	CoupDominos coup = (CoupDominos) p.coupsPossibles(this.joueurMax).get(i);
         	pTemp.joue(this.joueurMax, coup);
         	
-        	int hTemp = maxMin(pTemp,-999,999);
+        	int hTemp = minMax(pTemp,-999,999);
         	
         	if(hTemp > hMax) {
         		hMax = hTemp;
