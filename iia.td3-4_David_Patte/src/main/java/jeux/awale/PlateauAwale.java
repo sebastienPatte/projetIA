@@ -9,19 +9,40 @@ import iia.jeux.modele.joueur.Joueur;
 public class PlateauAwale implements PlateauJeu{
 	public final static int TAILLE = 6;
 	
-	/** Le joueur que joue "Blanc" */
+	
 	private static Joueur J1;
-
-	/** Le joueur que joue "noir" */
+	private int grainesJ1;
+	
 	private static Joueur J2;
+	private int grainesJ2;
 	
 	private int[][] plateau;
 	
 	public PlateauAwale() {
+		this.grainesJ1 = 0;
+		this.grainesJ2 = 0;
 		initPlateau();
 		affichePlateau();
-		System.out.println("coups possibles J1 : "+coupsPossibles(J1));
+		System.out.println("J1 joue 0");
 		joue(J1, new CoupAwale(0));
+		affichePlateau();
+		System.out.println("J2 joue 0");
+		joue(J2, new CoupAwale(0));
+		affichePlateau();
+		System.out.println("J1 joue 1");
+		joue(J1, new CoupAwale(1));
+		affichePlateau();
+		System.out.println("J2 joue 1");
+		joue(J2, new CoupAwale(1));
+		affichePlateau();
+		System.out.println("J1 joue 2");
+		joue(J1, new CoupAwale(2));
+		affichePlateau();
+		System.out.println("J2 joue 2");
+		joue(J2, new CoupAwale(2));
+		affichePlateau();
+		System.out.println("J1 joue 3");
+		joue(J1, new CoupAwale(3));
 		affichePlateau();
 	}
 	
@@ -42,6 +63,7 @@ public class PlateauAwale implements PlateauJeu{
 		for(int  i=0; i<TAILLE; i++) {
 			System.out.print(" "+plateau[1][i]);
 		}
+		System.out.println();
 		System.out.println();
 	}
 	
@@ -77,11 +99,12 @@ public class PlateauAwale implements PlateauJeu{
 		if(j.equals(J2)) {
 			numCamp = 1;
 		}
+		int numJoueur = numCamp;
 		
 		//nombre de graines à déposer
 		int nbGraines = plateau[numCamp][numCase];
 		//on vide la case jouée
-		plateau[0][numCase]=0;
+		plateau[numCamp][numCase]=0;
 		//tant qu'il reste des graines à déposer
 		while(nbGraines > 0){
 			//case suivante
@@ -107,6 +130,30 @@ public class PlateauAwale implements PlateauJeu{
 			//on ajoute une graine à la case
 			plateau[numCamp][numCase]++;
 			nbGraines--;
+		}
+		//quand on a plus de graines 
+		while(	numCamp != numJoueur &&
+			(plateau[numCamp][numCase] == 2 || plateau[numCamp][numCase]==3 )
+		) {
+			//capturer graines
+			if(numJoueur == 0) {
+				//J1
+				grainesJ1 += plateau[numCamp][numCase];
+				plateau[numCamp][numCase] = 0;
+				//case suivante
+				numCase++;
+			}else {
+				//J2
+				grainesJ1 += plateau[numCamp][numCase];
+				plateau[numCamp][numCase] = 0;
+				//case suivante
+				numCase++;
+			}
+			
+			if(numCase >= TAILLE || numCase <0) {
+				//si on dépasse la taille du tableau on change de camp (donc le while s'arrette)
+				numCamp = 1 - numCamp;
+			}
 		}
 		
 	}
