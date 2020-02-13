@@ -18,32 +18,20 @@ public class PlateauAwale implements PlateauJeu{
 	
 	private int[][] plateau;
 	
+	public PlateauAwale(int[][] plateau) {
+		this.plateau = new int[2][TAILLE];
+		for(int i=0; i<TAILLE; i++) {
+			this.plateau[0][i] = plateau[0][i];
+			this.plateau[1][i] = plateau[1][i];
+		}
+		
+	}
+	
 	public PlateauAwale() {
 		this.grainesJ1 = 0;
 		this.grainesJ2 = 0;
 		initPlateau();
-		affichePlateau();
-		System.out.println("J1 joue 0");
-		joue(J1, new CoupAwale(0));
-		affichePlateau();
-		System.out.println("J2 joue 0");
-		joue(J2, new CoupAwale(0));
-		affichePlateau();
-		System.out.println("J1 joue 1");
-		joue(J1, new CoupAwale(1));
-		affichePlateau();
-		System.out.println("J2 joue 1");
-		joue(J2, new CoupAwale(1));
-		affichePlateau();
-		System.out.println("J1 joue 2");
-		joue(J1, new CoupAwale(2));
-		affichePlateau();
-		System.out.println("J2 joue 2");
-		joue(J2, new CoupAwale(2));
-		affichePlateau();
-		System.out.println("J1 joue 3");
-		joue(J1, new CoupAwale(3));
-		affichePlateau();
+		
 	}
 	
 	private void initPlateau() {
@@ -54,7 +42,7 @@ public class PlateauAwale implements PlateauJeu{
 		}
 	}
 	
-	private void affichePlateau() {
+	public void affichePlateau() {
 		for(int  i=0; i<TAILLE; i++) {
 			System.out.print(" "+plateau[0][i]);
 		}
@@ -70,23 +58,13 @@ public class PlateauAwale implements PlateauJeu{
 	@Override
 	public ArrayList<CoupJeu> coupsPossibles(Joueur j) {
 		ArrayList<CoupJeu> res = new ArrayList<CoupJeu>();
-		if(j.equals(J1)) {
 			//on ajoute une case aux coupsPossibles si il ya des graines dedans
 			for(int i=0; i<TAILLE; i++) {
-				if(plateau[0][i]>0) {
+				if(coupValide(j,new CoupAwale(i))) {
 					res.add(new CoupAwale(i));
 				}
 			}
-		}else {
-			if(j.equals(J2)) {
-				//on ajoute une case aux coupsPossibles si il ya des graines dedans
-				for(int i=0; i<TAILLE; i++) {
-					if(plateau[1][i]>0) {
-						res.add(new CoupAwale(i));
-					}
-				}
-			}
-		}
+		
 		return res;
 	}
 
@@ -94,6 +72,7 @@ public class PlateauAwale implements PlateauJeu{
 	public void joue(Joueur j, CoupJeu c) {
 		CoupAwale newC = (CoupAwale) c;
 		int numCase = newC.getNumCase();
+		int caseInit = numCase;
 		// camp 0 pour J1 ou camp 1 pour J1
 		int numCamp = 0;
 		if(j.equals(J2)) {
@@ -107,6 +86,7 @@ public class PlateauAwale implements PlateauJeu{
 		plateau[numCamp][numCase]=0;
 		//tant qu'il reste des graines à déposer
 		while(nbGraines > 0){
+			
 			//case suivante
 			if(numCamp==0) {
 				//camp 0 -> on décrémente
@@ -127,12 +107,52 @@ public class PlateauAwale implements PlateauJeu{
 				}
 			}
 			
-			//on ajoute une graine à la case
-			plateau[numCamp][numCase]++;
-			nbGraines--;
+			//si on est pas sur la case initiale
+			if(numCamp != numJoueur || caseInit != numCase) {
+				//on ajoute une graine à la case
+				plateau[numCamp][numCase]++;
+				nbGraines--;
+			}
 		}
+		
 		//quand on a plus de graines 
+		
+		//simuler collecte
+		PlateauAwale plateauTemp = (PlateauAwale)(copy());
+		int [][] pTemp = plateauTemp.plateau;
+		
 		while(	numCamp != numJoueur &&
+				(pTemp[numCamp][numCase] == 2 || pTemp[numCamp][numCase]==3 )
+			) {
+				//capturer graines
+				if(numJoueur == 0) {
+					//J1
+					pTemp[numCamp][numCase] = 0;
+					//case suivante
+					numCase++;
+				}else {
+					//J2
+					pTemp[numCamp][numCase] = 0;
+					//case suivante
+					numCase--;
+				}
+				
+				if(numCase >= TAILLE || numCase <0) {
+					//si on dépasse la taille du tableau on change de camp (donc le while s'arrette)
+					numCamp = 1 - numCamp;
+				}
+			}
+		//test ennemi affamé
+		boolean ennemiAffame = true;
+			for(int i=0; i<TAILLE; i++) {
+				if(pTemp[1-numJoueur][i]!=0) {
+					ennemiAffame = false;
+				}
+			}
+		
+		
+		
+		while(ennemiAffame	&& numCamp != numJoueur &&
 			(plateau[numCamp][numCase] == 2 || plateau[numCamp][numCase]==3 )
 		) {
 			//capturer graines
@@ -144,10 +164,10 @@ public class PlateauAwale implements PlateauJeu{
 				numCase++;
 			}else {
 				//J2
-				grainesJ1 += plateau[numCamp][numCase];
+				grainesJ2 += plateau[numCamp][numCase];
 				plateau[numCamp][numCase] = 0;
 				//case suivante
-				numCase++;
+				numCase--;
 			}
 			
 			if(numCase >= TAILLE || numCase <0) {
@@ -158,22 +178,85 @@ public class PlateauAwale implements PlateauJeu{
 		
 	}
 
+	private int grainesEnJeu() {
+		int res=0;
+		for(int i=0; i<TAILLE; i++) {
+			res+= plateau[0][i];
+			res+= plateau[1][i];
+		}
+		return res;
+	}
+	
 	@Override
 	public boolean finDePartie() {
-		// TODO Auto-generated method stub
-		return false;
+		if(grainesJ1 >= 25 || grainesJ2 >= 25 || grainesEnJeu() <= 6){
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	@Override
 	public PlateauJeu copy() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PlateauAwale(this.plateau);
 	}
 
 	@Override
 	public boolean coupValide(Joueur j, CoupJeu c) {
-		// TODO Auto-generated method stub
-		return false;
+		CoupAwale newC = (CoupAwale) c;
+		if(j.equals(J1)) {
+			//J1
+			//si case non vide
+			if(plateau[0][newC.getNumCase()] > 0) {
+				PlateauAwale pTemp = (PlateauAwale) copy();
+				pTemp.joue(j, c);
+				for(int i=0; i<TAILLE; i++) {
+					//si une case ennemie n'est pas vide
+					if(plateau[1][i] > i) {
+						return true;
+					}
+				}
+				return false;
+			
+			}
+			//case vide
+			return false;
+			
+			
+			
+		}else {
+			//J2
+			//si case non vide
+			if(plateau[1][newC.getNumCase()] > 0) {
+				PlateauAwale pTemp = (PlateauAwale) copy();
+				pTemp.joue(j, c);
+				for(int i=0; i<TAILLE; i++) {
+					//si une case ennemie n'est pas vide
+					if(plateau[0][i] > TAILLE-i) {
+						return true;
+					}
+				}
+				return false;
+			}
+			//case vide
+			return false;
+		}
+	}
+	
+	public boolean isJ1(Joueur j) {
+		return j.equals(J1);
+	}
+	
+	public boolean isJ2(Joueur j) {
+		return j.equals(J2);
+	}
+	
+	public int getGrainesJ1() {
+		return grainesJ1;
+	}
+	
+	public int getGrainesJ2() {
+		return grainesJ2;
 	}
 	
 	/************* Gestion des paramètres de classe** ****************/ 

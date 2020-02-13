@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import iia.jeux.modele.CoupJeu;
 import iia.jeux.modele.PlateauJeu;
 import iia.jeux.modele.joueur.Joueur;
-import jeux.dominos.CoupDominos;
-import jeux.dominos.HeuristiquesDominos;
-import jeux.dominos.PlateauDominos;
+
 
 public class Minimax implements AlgoJeu {
 
@@ -71,7 +69,8 @@ public class Minimax implements AlgoJeu {
         /* A vous de compléter le corps de ce fichier */
         
         CoupJeu coupMax = p.coupsPossibles(this.joueurMax).get(0);
-        PlateauDominos pTempCoup1 = (PlateauDominos) p.copy();
+        PlateauJeu pTempCoup1 =  p.copy();
+        System.out.println("nb coups possibles = "+p.coupsPossibles(this.joueurMax).size());
     	pTempCoup1.joue(this.joueurMax, p.coupsPossibles(this.joueurMax).get(0));
     	int hMax =  minMax(pTempCoup1);
         
@@ -79,8 +78,8 @@ public class Minimax implements AlgoJeu {
     	System.out.println("nbCoupsPossibles = "+p.coupsPossibles(this.joueurMax).size());
         for(int i =1; i < p.coupsPossibles(this.joueurMax).size();i++) {
         	//System.out.println("i="+i);
-        	PlateauDominos pTemp = (PlateauDominos) p.copy();
-        	CoupDominos coup = (CoupDominos) p.coupsPossibles(this.joueurMax).get(i);
+        	PlateauJeu pTemp =  p.copy();
+        	CoupJeu coup =  p.coupsPossibles(this.joueurMax).get(i);
         	pTemp.joue(this.joueurMax, coup);
         	
         	int hTemp = minMax(pTemp);
@@ -112,7 +111,7 @@ public class Minimax implements AlgoJeu {
 
     //A vous de jouer pour implanter Minimax
     
-    private int maxMin(PlateauDominos p){
+    private int maxMin(PlateauJeu p){
     	
     	//System.out.println("maxMin profMax = "+profMax);
     	if(this.profMax <= 1 || p.finDePartie()) {
@@ -124,7 +123,7 @@ public class Minimax implements AlgoJeu {
     		int maxi = -999; //a modifier pour d'autres jeux    		
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
-    			PlateauDominos pTemp = (PlateauDominos) p.copy();
+    			PlateauJeu pTemp =  p.copy();
             	pTemp.joue(this.joueurMax, coup);
     	
             	//appel rec
@@ -136,7 +135,7 @@ public class Minimax implements AlgoJeu {
     		return maxi;
     	}
     }
-    private int minMax(PlateauDominos p){
+    private int minMax(PlateauJeu p){
     	
     	//System.out.println("minMax profMax = "+profMax);
     	if(this.profMax <= 1|| p.finDePartie()) {
@@ -148,7 +147,7 @@ public class Minimax implements AlgoJeu {
     		int mini = +999; //a modifier pour d'autres jeux
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
-    			PlateauDominos pTemp = (PlateauDominos) p.copy();
+    			PlateauJeu pTemp =  p.copy();
             	pTemp.joue(this.joueurMax, coup);
             	//appel rec
             	profMax--;

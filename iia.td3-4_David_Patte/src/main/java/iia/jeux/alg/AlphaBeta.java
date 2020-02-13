@@ -3,8 +3,7 @@ package iia.jeux.alg;
 import iia.jeux.modele.CoupJeu;
 import iia.jeux.modele.PlateauJeu;
 import iia.jeux.modele.joueur.Joueur;
-import jeux.dominos.CoupDominos;
-import jeux.dominos.PlateauDominos;
+
 
 public class AlphaBeta implements AlgoJeu{
     /** La profondeur de recherche par défaut
@@ -62,7 +61,7 @@ public class AlphaBeta implements AlgoJeu{
         /* A vous de compléter le corps de ce fichier */
         
         CoupJeu coupMax = p.coupsPossibles(this.joueurMax).get(0);
-        PlateauDominos pTempCoup1 = (PlateauDominos) p.copy();
+        PlateauJeu pTempCoup1 =  p.copy();
     	pTempCoup1.joue(this.joueurMax, p.coupsPossibles(this.joueurMax).get(0));
     	int hMax =  minMax(pTempCoup1,-999,999);
         
@@ -70,8 +69,8 @@ public class AlphaBeta implements AlgoJeu{
     	System.out.println("nbCoupsPossibles = "+p.coupsPossibles(this.joueurMax).size());
         for(int i =1; i < p.coupsPossibles(this.joueurMax).size();i++) {
         	//System.out.println("i="+i);
-        	PlateauDominos pTemp = (PlateauDominos) p.copy();
-        	CoupDominos coup = (CoupDominos) p.coupsPossibles(this.joueurMax).get(i);
+        	PlateauJeu pTemp =  p.copy();
+        	CoupJeu coup = (CoupJeu) p.coupsPossibles(this.joueurMax).get(i);
         	pTemp.joue(this.joueurMax, coup);
         	
         	int hTemp = minMax(pTemp,-999,999);
@@ -103,7 +102,7 @@ public class AlphaBeta implements AlgoJeu{
 
     //A vous de jouer pour implanter Minimax
     
-    private int maxMin(PlateauDominos p, int alpha, int beta){
+    private int maxMin(PlateauJeu p, int alpha, int beta){
     	
     	//System.out.println("maxMin profMax = "+profMax);
     	if(this.profMax <= 1 || p.finDePartie()) {
@@ -114,7 +113,7 @@ public class AlphaBeta implements AlgoJeu{
     		nbnoeuds++;
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
-    			PlateauDominos pTemp = (PlateauDominos) p.copy();
+    			PlateauJeu pTemp =  p.copy();
             	pTemp.joue(this.joueurMax, coup);
     	
             	//appel rec
@@ -128,7 +127,7 @@ public class AlphaBeta implements AlgoJeu{
     		return alpha;
     	}
     }
-    private int minMax(PlateauDominos p, int alpha, int beta){
+    private int minMax(PlateauJeu p, int alpha, int beta){
     	
     	//System.out.println("minMax profMax = "+profMax);
     	if(this.profMax <= 1|| p.finDePartie()) {
@@ -139,7 +138,7 @@ public class AlphaBeta implements AlgoJeu{
     		nbnoeuds++;
     		for(CoupJeu coup : p.coupsPossibles(this.joueurMax)) {
     			//on simule coup
-    			PlateauDominos pTemp = (PlateauDominos) p.copy();
+    			PlateauJeu pTemp =  p.copy();
             	pTemp.joue(this.joueurMax, coup);
             	//appel rec
             	profMax--;
