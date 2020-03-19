@@ -22,6 +22,8 @@ public class DuelSquadro {
         BoardSquadro board = new BoardSquadro();
         
         System.out.println(board);
+        System.out.println("Game Over : "+board.isGameOver());
+        System.out.println("mouvements possibles J1 : "+board.possibleMoves(RoleSquadro.FIRST));
         System.out.println(" ======= GAME OVER =======");
 
     }

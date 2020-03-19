@@ -19,12 +19,6 @@ public class BoardSquadro extends ABoard<MoveSquadro, RoleSquadro, BoardSquadro>
 		initPieces();
 	}
 
-	private void initPieces() {
-		for(int i=1; i<TAILLE-1; i++) {
-			this.grille[i][0] = new Piece(deplacementJ[i-1],RoleSquadro.FIRST);
-			this.grille[TAILLE-1][i] = new Piece(deplacementR[i-1],RoleSquadro.SECOND);
-		}
-	}
 	
     @Override
     public BoardSquadro play(MoveSquadro move, RoleSquadro role) {
@@ -33,31 +27,27 @@ public class BoardSquadro extends ABoard<MoveSquadro, RoleSquadro, BoardSquadro>
 
     @Override
     public ArrayList<MoveSquadro> possibleMoves(RoleSquadro role) {
-        return null;
+    	ArrayList<MoveSquadro> moves = new ArrayList<MoveSquadro>();
+    	for(int i=1; i<=5; i++) {
+        	if(!pieceFini(i, role)) {
+        		moves.add(new MoveSquadro(i));
+        	}
+        }
+    	return moves;
     }
 
 
     @Override
     public boolean isGameOver() {
-        return false;
+    	return !restePiece(RoleSquadro.FIRST) || !restePiece(RoleSquadro.FIRST);
     }
 
     @Override
     public boolean isValidMove(MoveSquadro move, RoleSquadro role) {
-            return false;
+            return move.getNumPiece() >= 1 && move.getNumPiece() <= 5;
     }
 
-    public int getNbPieces(RoleSquadro role) {
-    	int res=0;
-    	for(int i=0; i<TAILLE; i++) {
-    		for(int j=0; j<TAILLE; j++) {
-    			if(grille[i][j] != null && grille[i][j].getRole() == role) {
-    				res++;
-    			}
-    		}
-    	}
-    	return res;
-    }
+    
     
     @Override
     public String toString() {
@@ -88,4 +78,46 @@ public class BoardSquadro extends ABoard<MoveSquadro, RoleSquadro, BoardSquadro>
     	}
     	return res;
     }
+    
+    //méthodes supplémentaires
+    
+    private void initPieces() {
+		for(int i=1; i<TAILLE-1; i++) {
+			this.grille[i][0] = new Piece(deplacementJ[i-1],RoleSquadro.FIRST);
+			this.grille[TAILLE-1][i] = new Piece(deplacementR[i-1],RoleSquadro.SECOND);
+		}
+	}
+    
+    public int getNbPieces(RoleSquadro role) {
+    	int res=0;
+    	for(int i=0; i<TAILLE; i++) {
+    		for(int j=0; j<TAILLE; j++) {
+    			if(grille[i][j] != null && grille[i][j].getRole() == role) {
+    				res++;
+    			}
+    		}
+    	}
+    	return res;
+    }
+    
+    private boolean pieceFini(int i, RoleSquadro role) {
+    	if(role == RoleSquadro.FIRST){
+    		return (grille[i][0] != null && grille[i][0].getD() < 0);
+    	}else {
+    		return (grille[TAILLE-1][i] != null && grille[i][0].getD() < 0);
+    	}
+    	
+    	
+    }
+    
+    
+    private boolean restePiece(RoleSquadro role) {
+    	for(int i=1;i<=5;i++) {
+    		if( !pieceFini(i, role)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
 }
